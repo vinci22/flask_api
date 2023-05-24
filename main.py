@@ -69,7 +69,8 @@ def get_productos():
     producto_schema = ProductoSchema(many=True)
     result = producto_schema.dump(productos)
     response = jsonify(result)
-    return response.headers.add("Access-Control-Allow-Origin", "*")
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
  
 
 @app.route('/crear_productos', methods=['POST'])
