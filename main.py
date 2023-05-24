@@ -70,7 +70,7 @@ def get_productos():
     result = producto_schema.dump(productos)
     return jsonify(result)
 
-@app.route('/productos', methods=['POST'])
+@app.route('/crear_productos', methods=['POST'])
 def create_producto():
     data = request.get_json()
     nombre = data.get('nombre')
@@ -116,7 +116,7 @@ def get_clientes():
     result = cliente_schema.dump(clientes)
     return jsonify(result)
 
-@app.route('/clientes', methods=['POST'])
+@app.route('/crear_clientes', methods=['POST'])
 def create_cliente():
     data = request.get_json()
     nombre = data.get('nombre')
@@ -162,7 +162,7 @@ def get_ordenes():
     result = orden_schema.dump(ordenes)
     return jsonify(result)
 
-@app.route('/ordenes', methods=['POST'])
+@app.route('/crear_ordenes', methods=['POST'])
 def create_orden():
     data = request.get_json()
     cliente_id = data.get('cliente_id')
