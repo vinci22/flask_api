@@ -25,7 +25,7 @@ class Producto(db.Model):
     precio = db.Column(db.Float)
     stock = db.Column(db.Integer)
     grupo_id = db.Column(db.Integer, db.ForeignKey('grupos.id'))
-    grupos = db.relationship('GrupoProducto', backref='grupo_productos')
+    grupo = db.relationship('GrupoProducto', backref='grupos')
     
     
 
@@ -52,6 +52,9 @@ class ProductoOrden(db.Model):
     producto = db.relationship('Producto', backref='productos_orden')
 
 # Definición de los esquemas de serialización con Marshmallow
+class GrupoProductoSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = GrupoProducto
 class ProductoSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Producto
