@@ -105,7 +105,7 @@ def create_producto():
 
     return jsonify({'message': 'Producto creado exitosamente'}), 201
 
-@app.route('/productos', methods=['GET'])
+@app.route('/producto', methods=['GET'])
 def get_producto(producto_id=id):
     producto = Producto.query.get(producto_id)
     producto_schema = ProductoSchema()
