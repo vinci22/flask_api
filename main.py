@@ -20,11 +20,11 @@ class GrupoProducto(db.Model):
     
 class Producto(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    grupo_id = db.Column(db.Integer, db.ForeignKey('grupo.id'))
     nombre = db.Column(db.String(100))
     descripcion = db.Column(db.Text)
     precio = db.Column(db.Float)
     stock = db.Column(db.Integer)
-    grupo_id = db.Column(db.Integer, db.ForeignKey('grupo.id'))
     grupo = db.relationship('GrupoProducto', backref='grupos')
     
     
