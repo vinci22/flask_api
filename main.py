@@ -83,13 +83,32 @@ class ProductoOrdenSchema(ma.SQLAlchemyAutoSchema):
 # Rutas de la API
 @app.route('/productos', methods=['GET'])
 def get_productos():
-    productos = Producto.query.all()
+    nombre = request.args.get('nombre')
+    descripcion = request.args.get('descripcion')
+    precio = request.args.get('precio')
+    stock = request.args.get('stock')
+
+    query = db.session.query(Producto)
+
+    if nombre:
+        query = query.filter(Producto.nombre.ilike(f'%{nombre}%'))
+
+    if descripcion:
+        query = query.filter(Producto.descripcion.ilike(f'%{descripcion}%'))
+
+    if precio:
+        query = query.filter(Producto.precio == precio)
+
+    if stock:
+        query = query.filter(Producto.stock == stock)
+
+    productos = query.all()
     producto_schema = ProductoSchema(many=True)
     result = producto_schema.dump(productos)
     response = jsonify(result)
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response
- 
+
 
 @app.route('/crear_productos', methods=['POST'])
 def create_producto():
@@ -105,24 +124,28 @@ def create_producto():
 
     return jsonify({'message': 'Producto creado exitosamente'}), 201
 
+
 @app.route('/producto', methods=['GET'])
-def get_producto(producto_id=id):
-    producto = Producto.query.get('producto_id')
+def get_producto():
+    producto_id = request.args.get('producto_id')
+    producto = Producto.query.get(producto_id)
     producto_schema = ProductoSchema()
     result = producto_schema.dump(producto)
     return jsonify(result)
 
+
 @app.route('/productoByGroup', methods=['GET'])
-def producto_By_group():
-    grupo_by_id = request.args.get('grupo_id')
-    producto = Producto.query.get.(grupo_by_id)
-    producto_schema = ProductoSchema()
-    result = producto_schema.dump(producto)
+def producto_by_group():
+    grupo_id = request.args.get('grupo_id')
+    productos = Producto.query.filter_by(grupo_id=grupo_id).all()
+    producto_schema = ProductoSchema(many=True)
+    result = producto_schema.dump(productos)
     return jsonify(result)
 
 
 @app.route('/productos', methods=['PUT'])
-def update_producto(producto_id=id):
+def update_producto():
+    producto_id = request.args.get('producto_id')
     producto = Producto.query.get(producto_id)
     data = request.get_json()
     producto.nombre = data.get('nombre')
@@ -132,19 +155,42 @@ def update_producto(producto_id=id):
     db.session.commit()
     return jsonify({'message': 'Producto actualizado exitosamente'})
 
-@app.route('/productos/<int:producto_id>', methods=['DELETE'])
-def delete_producto(producto_id):
+
+@app.route('/productos', methods=['DELETE'])
+def delete_producto():
+    producto_id = request.args.get('producto_id')
     producto = Producto.query.get(producto_id)
     db.session.delete(producto)
     db.session.commit()
     return jsonify({'message': 'Producto eliminado exitosamente'})
 
+
 @app.route('/clientes', methods=['GET'])
 def get_clientes():
-    clientes = Cliente.query.all()
+    nombre = request.args.get('nombre')
+    email = request.args.get('email')
+    telefono = request.args.get('telefono')
+    direccion = request.args.get('direccion')
+
+    query = db.session.query(Cliente)
+
+    if nombre:
+        query = query.filter(Cliente.nombre.ilike(f'%{nombre}%'))
+
+    if email:
+        query = query.filter(Cliente.email.ilike(f'%{email}%'))
+
+    if telefono:
+        query = query.filter(Cliente.telefono == telefono)
+
+    if direccion:
+        query = query.filter(Cliente.direccion.ilike(f'%{direccion}%'))
+
+    clientes = query.all()
     cliente_schema = ClienteSchema(many=True)
     result = cliente_schema.dump(clientes)
     return jsonify(result)
+
 
 @app.route('/crear_clientes', methods=['POST'])
 def create_cliente():
@@ -160,15 +206,10 @@ def create_cliente():
 
     return jsonify({'message': 'Cliente creado exitosamente'}), 201
 
-@app.route('/clientes/<int:cliente_id>', methods=['GET'])
-def get_cliente(cliente_id):
-    cliente = Cliente.query.get(cliente_id)
-    cliente_schema = ClienteSchema()
-    result = cliente_schema.dump(cliente)
-    return jsonify(result)
 
-@app.route('/clientes/<int:cliente_id>', methods=['PUT'])
-def update_cliente(cliente_id):
+@app.route('/clientes', methods=['PUT'])
+def update_cliente():
+    cliente_id = request.args.get('cliente_id')
     cliente = Cliente.query.get(cliente_id)
     data = request.get_json()
     cliente.nombre = data.get('nombre')
@@ -178,19 +219,38 @@ def update_cliente(cliente_id):
     db.session.commit()
     return jsonify({'message': 'Cliente actualizado exitosamente'})
 
-@app.route('/clientes/<int:cliente_id>', methods=['DELETE'])
-def delete_cliente(cliente_id):
+
+@app.route('/clientes', methods=['DELETE'])
+def delete_cliente():
+    cliente_id = request.args.get('cliente_id')
     cliente = Cliente.query.get(cliente_id)
     db.session.delete(cliente)
     db.session.commit()
     return jsonify({'message': 'Cliente eliminado exitosamente'})
 
+
 @app.route('/ordenes', methods=['GET'])
 def get_ordenes():
-    ordenes = Orden.query.all()
+    cliente_id = request.args.get('cliente_id')
+    fecha = request.args.get('fecha')
+    total = request.args.get('total')
+
+    query = db.session.query(Orden)
+
+    if cliente_id:
+        query = query.filter(Orden.cliente_id == cliente_id)
+
+    if fecha:
+        query = query.filter(Orden.fecha == fecha)
+
+    if total:
+        query = query.filter(Orden.total == total)
+
+    ordenes = query.all()
     orden_schema = OrdenSchema(many=True)
     result = orden_schema.dump(ordenes)
     return jsonify(result)
+
 
 @app.route('/crear_ordenes', methods=['POST'])
 def create_orden():
@@ -205,15 +265,10 @@ def create_orden():
 
     return jsonify({'message': 'Orden creada exitosamente'}), 201
 
-@app.route('/ordenes/<int:orden_id>', methods=['GET'])
-def get_orden(orden_id):
-    orden = Orden.query.get(orden_id)
-    orden_schema = OrdenSchema()
-    result = orden_schema.dump(orden)
-    return jsonify(result)
 
-@app.route('/ordenes/<int:orden_id>', methods=['PUT'])
-def update_orden(orden_id):
+@app.route('/ordenes', methods=['PUT'])
+def update_orden():
+    orden_id = request.args.get('orden_id')
     orden = Orden.query.get(orden_id)
     data = request.get_json()
     orden.cliente_id = data.get('cliente_id')
@@ -222,19 +277,38 @@ def update_orden(orden_id):
     db.session.commit()
     return jsonify({'message': 'Orden actualizada exitosamente'})
 
-@app.route('/ordenes/<int:orden_id>', methods=['DELETE'])
-def delete_orden(orden_id):
+
+@app.route('/ordenes', methods=['DELETE'])
+def delete_orden():
+    orden_id = request.args.get('orden_id')
     orden = Orden.query.get(orden_id)
     db.session.delete(orden)
     db.session.commit()
     return jsonify({'message': 'Orden eliminada exitosamente'})
 
+
 @app.route('/productos-orden', methods=['GET'])
 def get_productos_orden():
-    productos_orden = ProductoOrden.query.all()
+    producto_id = request.args.get('producto_id')
+    orden_id = request.args.get('orden_id')
+    cantidad = request.args.get('cantidad')
+
+    query = db.session.query(ProductoOrden)
+
+    if producto_id:
+        query = query.filter(ProductoOrden.producto_id == producto_id)
+
+    if orden_id:
+        query = query.filter(ProductoOrden.orden_id == orden_id)
+
+    if cantidad:
+        query = query.filter(ProductoOrden.cantidad == cantidad)
+
+    productos_orden = query.all()
     producto_orden_schema = ProductoOrdenSchema(many=True)
     result = producto_orden_schema.dump(productos_orden)
     return jsonify(result)
+
 
 @app.route('/productos-orden', methods=['POST'])
 def create_producto_orden():
@@ -249,15 +323,10 @@ def create_producto_orden():
 
     return jsonify({'message': 'ProductoOrden creado exitosamente'}), 201
 
-@app.route('/productos-orden/<int:producto_orden_id>', methods=['GET'])
-def get_producto_orden(producto_orden_id):
-    producto_orden = ProductoOrden.query.get(producto_orden_id)
-    producto_orden_schema = ProductoOrdenSchema()
-    result = producto_orden_schema.dump(producto_orden)
-    return jsonify(result)
 
-@app.route('/productos-orden/<int:producto_orden_id>', methods=['PUT'])
-def update_producto_orden(producto_orden_id):
+@app.route('/productos-orden', methods=['PUT'])
+def update_producto_orden():
+    producto_orden_id = request.args.get('producto_orden_id')
     producto_orden = ProductoOrden.query.get(producto_orden_id)
     data = request.get_json()
     producto_orden.producto_id = data.get('producto_id')
@@ -266,8 +335,10 @@ def update_producto_orden(producto_orden_id):
     db.session.commit()
     return jsonify({'message': 'ProductoOrden actualizado exitosamente'})
 
-@app.route('/productos-orden/<int:producto_orden_id>', methods=['DELETE'])
-def delete_producto_orden(producto_orden_id):
+
+@app.route('/productos-orden', methods=['DELETE'])
+def delete_producto_orden():
+    producto_orden_id = request.args.get('producto_orden_id')
     producto_orden = ProductoOrden.query.get(producto_orden_id)
     db.session.delete(producto_orden)
     db.session.commit()
