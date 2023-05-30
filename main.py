@@ -15,7 +15,7 @@ ma = Marshmallow(app)
 # Definición de los modelos de las tablas
 
 class GrupoProducto(db.Model):
-    id = db.Column(db.Integer, primary_key=True,auto_incremental=True)
+    id = db.Column(db.Integer, primary_key=True,autoincrement=True)
     descripcion = db.Column(db.String(255))
     
 class Producto(db.Model):
