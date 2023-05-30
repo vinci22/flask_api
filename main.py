@@ -13,12 +13,18 @@ db = SQLAlchemy(app)
 ma = Marshmallow(app)
 
 # Definición de los modelos de las tablas
+
+class grupo_producto(db.Model):
+    id = db.Column(db.Integer, primary_key=True,auto_incremental=True)
+    descripcion = db.Column(db.String(255))
+    
 class Producto(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     nombre = db.Column(db.String(100))
     descripcion = db.Column(db.Text)
     precio = db.Column(db.Float)
     stock = db.Column(db.Integer)
+    grupo_producto_id = db.Column(db.Integer, db.ForeignKey('grupo_producto.id'))
 
 class Cliente(db.Model):
     id = db.Column(db.Integer, primary_key=True)
