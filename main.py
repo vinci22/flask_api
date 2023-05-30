@@ -14,18 +14,14 @@ ma = Marshmallow(app)
 
 # Definición de los modelos de las tablas
 
-class GrupoProducto(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    descripcion = db.Column(db.String(255))
 
 class Producto(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    grupo_id = db.Column(db.Integer, db.ForeignKey('grupo_producto.id'))
     nombre = db.Column(db.String(100))
     descripcion = db.Column(db.Text)
     precio = db.Column(db.Float)
     stock = db.Column(db.Integer)
-    grupo = db.relationship('GrupoProducto', backref='productos')
+
     
     
 
@@ -52,15 +48,12 @@ class ProductoOrden(db.Model):
     producto = db.relationship('Producto', backref='productos_orden')
 
 # Definición de los esquemas de serialización con Marshmallow
-class GrupoProductoSchema(ma.SQLAlchemyAutoSchema):
-    class Meta:
-        model = GrupoProducto
+
 
 class ProductoSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Producto
-    grupo = ma.Nested(GrupoProductoSchema)
-
+  
 
 class ClienteSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
