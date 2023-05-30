@@ -114,8 +114,8 @@ def get_producto(producto_id=id):
 
 @app.route('/productoByGroup', methods=['GET'])
 def producto_By_group():
-    grupo_id = request.args.get('grupo_id')
-    producto = Producto.query.get.(grupo_id)
+    grupo_by_id = request.args.get('grupo_id')
+    producto = Producto.query.get.(grupo_by_id)
     producto_schema = ProductoSchema()
     result = producto_schema.dump(producto)
     return jsonify(result)
