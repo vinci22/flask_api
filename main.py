@@ -107,10 +107,19 @@ def create_producto():
 
 @app.route('/producto', methods=['GET'])
 def get_producto(producto_id=id):
-    producto = Producto.query.get(producto_id)
+    producto = Producto.query.get('producto_id')
     producto_schema = ProductoSchema()
     result = producto_schema.dump(producto)
     return jsonify(result)
+
+@app.route('/productoByGroup', methods=['GET'])
+def producto_By_group():
+    grupo_id = request.args.get('grupo_id')
+    producto = Producto.query.get.(grupo_id)
+    producto_schema = ProductoSchema()
+    result = producto_schema.dump(producto)
+    return jsonify(result)
+
 
 @app.route('/productos', methods=['PUT'])
 def update_producto(producto_id=id):
