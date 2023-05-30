@@ -121,13 +121,11 @@ def get_producto():
 
 @app.route('/productoByGroup', methods=['GET'])
 def producto_By_group():
-    data = request.get_json()
-    grupo_id = data.get('id')
+    grupo_id = request.args.get('id')
     producto = Producto.query.filter_by(grupo_id=grupo_id).all()
     producto_schema = ProductoSchema(many=True)
     result = producto_schema.dump(producto)
     response = jsonify(result)
-    response.headers.add("Access-Control-Allow-Origin", "*")
     return response
     
 
