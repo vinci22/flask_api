@@ -123,7 +123,10 @@ def producto_By_group():
     producto = Producto.query.filter_by(grupo_id=grupo_id).all()
     producto_schema = ProductoSchema(many=True)
     result = producto_schema.dump(producto)
-    return jsonify(result)
+    response = jsonify(result)
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+    
 
 
 @app.route('/productos/<int:producto_id>', methods=['PUT'])
