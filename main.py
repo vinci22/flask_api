@@ -24,7 +24,8 @@ class Producto(db.Model):
     descripcion = db.Column(db.Text)
     precio = db.Column(db.Float)
     stock = db.Column(db.Integer)
-    grupo_producto_id = db.Column(db.Integer, db.ForeignKey('GrupoProducto.id'))
+    GrupoProducto = db.Column(db.Integer, db.ForeignKey('GrupoProducto.id'))
+    
 
 class Cliente(db.Model):
     id = db.Column(db.Integer, primary_key=True)
