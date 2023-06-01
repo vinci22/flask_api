@@ -105,6 +105,10 @@ def insertar_usuario():
     # Obtener los datos enviados en la solicitud
     datos = request.get_json()
 
+    # Verificar que todas las claves existan en el diccionario de datos
+    if 'nombre' not in datos or 'email' not in datos or 'password' not in datos:
+        return jsonify({'error': 'Faltan datos requeridos'}), 400
+
     # Crear una nueva instancia de Usuarios con los datos recibidos
     nuevo_usuario = Usuarios(nombre=datos['nombre'], correo=datos['email'], contraseña=datos['password'])
 
@@ -113,7 +117,6 @@ def insertar_usuario():
     db.session.commit()
 
     # Retornar una respuesta con el usuario insertado
-   
     return jsonify({'message': 'creado exitosamente'}), 201
 
 
