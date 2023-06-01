@@ -18,7 +18,7 @@ ma = Marshmallow(app)
 # Definición de los modelos de las tablas
 
 class Usuarios(db.Model):
-    id = db.Column(db.Integer, primary_key=True,autoincrement=True)
+    id = db.Column(db.Integer, primary_key=True)
     nombre = db.Column(db.String(255))
     correo = db.Column(db.String(255))
     contraseña = db.Column(db.String(255))
@@ -67,6 +67,7 @@ class ProductoOrden(db.Model):
 class UsuariosSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Usuarios
+        
 class GrupoProductoSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = GrupoProducto
@@ -94,25 +95,27 @@ class ProductoOrdenSchema(ma.SQLAlchemyAutoSchema):
 
 # Rutas de la API
 
+class UsuariosSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = Usuarios
+
+# Rutas de la API
 @app.route('/insertarusuario', methods=['POST'])
 def insertar_usuario():
     # Obtener los datos enviados en la solicitud
     datos = request.get_json()
 
-    # Crear una nueva instancia de Usuario con los datos recibidos
-    nuevo_usuario = usuarios(nombre=datos['nombre'], correo=datos['email'], contraseña=datos['password'])
+    # Crear una nueva instancia de Usuarios con los datos recibidos
+    nuevo_usuario = Usuarios(nombre=datos['nombre'], correo=datos['email'], contraseña=datos['password'])
 
     # Insertar el nuevo usuario en la base de datos
     db.session.add(nuevo_usuario)
     db.session.commit()
 
     # Retornar una respuesta con el usuario insertado
-    return jsonify({
-        'id': nuevo_usuario.id,
-        'nombre': nuevo_usuario.nombre,
-        'email': nuevo_usuario.email,
-        'password': nuevo_usuario.password
-    }), 201
+    usuario_schema = UsuariosSchema()
+    result = usuario_schema.dump(nuevo_usuario)
+    return jsonify(result), 201
 
 
 @app.route('/productos', methods=['GET'])
