@@ -113,9 +113,8 @@ def insertar_usuario():
     db.session.commit()
 
     # Retornar una respuesta con el usuario insertado
-    usuario_schema = UsuariosSchema()
-    result = usuario_schema.dump(nuevo_usuario)
-    return jsonify(result), 201
+   
+    return jsonify({'message': 'creado exitosamente'}), 201
 
 
 @app.route('/productos', methods=['GET'])
