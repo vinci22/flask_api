@@ -94,7 +94,7 @@ class ProductoOrdenSchema(ma.SQLAlchemyAutoSchema):
 
 # Rutas de la API
 
-@app.route('/insertar_usuario', methods=['POST'])
+@app.route('/insertarusuario', methods=['POST'])
 def insertar_usuario():
     # Obtener los datos enviados en la solicitud
     datos = request.get_json()
