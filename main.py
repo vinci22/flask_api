@@ -100,7 +100,7 @@ def insertar_usuario():
     datos = request.get_json()
 
     # Crear una nueva instancia de Usuario con los datos recibidos
-    nuevo_usuario = usuario(nombre=datos['nombre'], correo=datos['email'], contraseña=datos['password'])
+    nuevo_usuario = usuarios(nombre=datos['nombre'], correo=datos['email'], contraseña=datos['password'])
 
     # Insertar el nuevo usuario en la base de datos
     db.session.add(nuevo_usuario)
